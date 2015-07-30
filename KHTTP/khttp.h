@@ -4,7 +4,7 @@
 // $Date: 2012-05-04 17:37:22 +0400 (Пт, 04 май 2012) $
 // $Rev: 88 $
 // description: 
-//	Kernel-mode HTTP implemntation over KIP.
+//	Kernel-mode HTTP implementation over KIP.
 
 
 // By default, all KHTTP functions are performed synchronously. 

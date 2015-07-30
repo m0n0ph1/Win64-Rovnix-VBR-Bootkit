@@ -1,19 +1,16 @@
-Утилита для объединения файлов FJ
+Utility to concatenate files FJ
 ---------------------------------
 
-Предназначена для прикрепления одного или нескольких исполняемых файлов 
- (EXE, DLL или SYS) к файлу-инсталятору или драйверу.
-Файл-инсталятор (драйвер) должен поддерживать прикрепленные файлы.
-В качестве файла-инсталятора могут использоваться:
-- драйвер KLoader.sys, для прикрепления к нему DLL для инжекта
-- модуль BkSetup.exe, для прикрепления к нему драйвера для загрузки.
+Designed to attach one or more executable files (EXE, DLL or SYS) file or driver-installer.
+File-installer (the driver) must support attachments.
 
-Принцип работы
-Прикрепляемые файлы сжимаются и дописываются в конец файла-инсталятора, 
- при этом структура модуля-инсталятора изменяется так, чтобы прикрепленные 
- файлы оказывались в памяти при загрузке модуля-инсталятора. В дальнейшем,
- код в модуле-инсталяторе распаковывает прикрепленные файлы.
+As an installer file can be used:
+- Driver KLoader.sys, for attaching thereto DLL for injection produce
+- Module BkSetup.exe, to attach to it the driver to download.
 
-Файл конфигурации
-Перечень файлов для прикрепления и их параметров задается специальным
- файлом конфигурации. Пример файла конфигурации прилагается.
+How it works:
+Attachment files are compressed and appended to the file-installer, the structure of the module-installer changes so attached the files themselves in the memory module load-installer. further, code in the module-installer decompresses attachments.
+ 
+Configuration file:
+The list of files to attach and their parameters is given special configuration file . An example configuration file is included.
+ 

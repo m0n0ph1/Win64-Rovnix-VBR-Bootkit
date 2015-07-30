@@ -1,4 +1,4 @@
-Открыть консоль.
-Перейти в папку BkBuild.
-Запустить пакетный файл bkbuild.bat.
-Из папки Release забрать готовые файлы.
+Open the console.
+Go to the folder BkBuild.
+Run the batch file bkbuild.bat.
+From the folder Release pick up files.

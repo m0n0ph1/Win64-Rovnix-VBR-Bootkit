@@ -5,7 +5,7 @@
 // $Revision: 39 $
 // $Date: 2012-05-02 15:38:09 +0400 (Ср, 02 май 2012) $
 // description: 
-//	Kernel-mode hoking engine implementation.
+//	Kernel-mode hooking engine implementation.
 
 #pragma once
 
